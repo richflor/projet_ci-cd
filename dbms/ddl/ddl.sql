@@ -1,6 +1,6 @@
 
 /* La définition du schéma */
-use db_country;
+-- use db_country;
 
 /* COUNTRY */
 create table if not exists COUNTRY (

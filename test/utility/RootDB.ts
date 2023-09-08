@@ -28,7 +28,10 @@ export class RootDB {
     await POOL.query(setup);
 
     const ddl = await readFile(join('dbms', 'ddl', 'ddl.sql'), { encoding: 'utf-8'});
-    await POOL.query(`use ${database}; ${ddl}`);
+    console.log("QUERY")
+    const query = `use ${database}; ${ddl}`
+    console.log(query)
+    await POOL.query(query);
 
     await POOL.end();
   }

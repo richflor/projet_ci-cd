@@ -15,7 +15,7 @@ async (request, response, next: NextFunction) => {
         const parse = numberToConvertSchema.safeParse(numberToConvert);
 
         if(!parse.success) {
-            throw new ApiError(ErrorCode.BadRequest, "validation/failed", "Format is wrong, can only convert a positive integer into a binary")
+            throw new ApiError(ErrorCode.BadRequest, "validation/failed", "Format is wrong")
         }
 
         const res:BinaryConverterResponse = {

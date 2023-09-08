@@ -1,27 +1,34 @@
-import express, { Request, Response , Application , json} from 'express';
-import dotenv from 'dotenv';
-import { ROUTE_BIN_CONVERTER } from './formula/BinaryConverter';
-import { ROUTES_COUNTRY } from './routes/Country';
-import { DefaultErrorHandler } from './middleware/error-handler.middleware';
+import { StartServer, StopServer } from './server_manager';
+import { DB } from './utility/DB';
 
-//For env File 
-dotenv.config();
+StartServer().then(
+  (server) => {
+    
+    const shutdown = async () => {
+      console.log("Stopping server...");
+      await StopServer(server);
+      console.log("Closing DB connections...");
+      await DB.Close();
+      console.log("Ready to quit.");
+    }
+    
 
-const app: Application = express();
-const port = process.env.PORT || 8000;
+    // For nodemon restarts
+    process.once('SIGUSR2', async function () {
+      await shutdown();
+      process.kill(process.pid, 'SIGUSR2');
+    });
 
-app.use(json());
+    // For app termination
+    process.on('SIGINT', async function () {
+      await shutdown();
+      process.exit(0);
+    });
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Welcome to Express & TypeScript Server');
-});
-
-app.use("/convert_to_binary", ROUTE_BIN_CONVERTER);
-
-app.use("/country", ROUTES_COUNTRY)
-
-app.use(DefaultErrorHandler);
-
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
-});
+    // For Heroku app termination
+    process.on('SIGTERM',  async function () {
+      await shutdown();
+      process.exit(0);
+    });
+  }
+);

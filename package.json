@@ -7,7 +7,11 @@
     "build": "npx tsc",
     "start": "node build/src/server.js",
     "dev": "ts-node-dev src/server.ts",
-    "unit": "mocha -r ts-node/register \"test/unit/suites/**/*.test.ts\""
+    "unit": "mocha -r ts-node/register \"test/unit/suites/**/*.test.ts\"",
+    "integration": "env-cmd -f ./test/.env.test npm run integration-no-env",
+    "integration-no-env": "mocha -r ts-node/register \"test/integration/suites/**/*.test.ts\"",
+    "e2e": "env-cmd -f ./test/.env.test npm run e2e-no-env",
+    "e2e-no-env": "mocha -r ts-node/register \"test/e2e/suites/**/*.test.ts\""
   },
   "keywords": [],
   "author": "",
@@ -25,8 +29,10 @@
     "@types/cors": "^2.8.14",
     "@types/express": "^4.17.17",
     "@types/mocha": "^10.0.1",
+    "axios": "^1.5.0",
     "chai": "^4.3.8",
     "chai-as-promised": "^7.1.1",
+    "env-cmd": "^10.1.0",
     "mocha": "^10.2.0",
     "nodemon": "^3.0.1",
     "ts-node-dev": "^2.0.0",
